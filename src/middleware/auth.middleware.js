@@ -16,6 +16,7 @@ const authMiddleware= (req,res, next)=>{
         req.user= decoded;
         next();
     } catch(error){
+        console.error(error);
         return res.status(401).json({
             success: false,
             error: "Unauthorized access, Invalid or missing token",
