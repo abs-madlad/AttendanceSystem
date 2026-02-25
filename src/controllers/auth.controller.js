@@ -16,7 +16,7 @@ const signup= async (req,res)=>{
         //hash the password
         const hashedPassword= await bcrypt.hash(password, 10);
         //now create the user
-        const user= await user.create({
+        const user= await User.create({
             name,
             email,
             password: hashedPassword,
@@ -32,6 +32,7 @@ const signup= async (req,res)=>{
             },
         });
     } catch(error){
+        console.error(error);
         return res.status(500).json({
             success: false,
             error: "Server error"
@@ -66,7 +67,7 @@ const login= async (req,res)=>{
                 userId: user._id,
                 role: user.role,
             },
-            process.env.HWT_SECRET,
+            process.env.JWT_SECRET,
             {expiresIn: "1d"}
         );
         return res.status(200).json({
@@ -76,9 +77,15 @@ const login= async (req,res)=>{
             },
         });
     } catch(error){
+        console.error(error);
         return res.status(500).json({
             success: false,
             error: "Server error",
         });
     }
+};
+
+module.exports= {
+    signup,
+    login,
 };
